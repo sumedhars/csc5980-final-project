@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/taskListFragment">
+
+    <fragment
+        android:id="@+id/taskListFragment"
+        android:name="edu.msoe.myapplication.ui.fragments.TaskListFragment"
+        android:label="Tasks">
+        <action
+            android:id="@+id/action_taskList_to_timer"
+            app:destination="@id/timerFragment" />
+        <action
+            android:id="@+id/action_taskList_to_exportManager"
+            app:destination="@id/exportManagerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/timerFragment"
+        android:name="edu.msoe.myapplication.ui.fragments.TimerFragment"
+        android:label="Timer">
+        <!-- Define any actions if needed -->
+    </fragment>
+
+    <fragment
+        android:id="@+id/exportManagerFragment"
+        android:name="edu.msoe.myapplication.ui.fragments.ExportManagerFragment"
+        android:label="Export">
+        <action
+            android:id="@+id/action_exportManager_to_exportDatePicker"
+            app:destination="@id/exportDatePickerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/exportDatePickerFragment"
+        android:name="edu.msoe.myapplication.ui.fragments.ExportDatePickerFragment"
+        android:label="Select Date" />
+</navigation>
