@@ -1,6 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Header -->
+    <TextView
+        android:id="@+id/tvDatePickerTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Date Range"
+        android:textSize="20sp"
+        android:paddingBottom="16dp" />
+
+    <!-- DatePicker for the start date -->
+    <DatePicker
+        android:id="@+id/datePickerStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!-- DatePicker for the end date -->
+    <DatePicker
+        android:id="@+id/datePickerEnd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp" />
+
+    <!-- Confirm Button -->
+    <Button
+        android:id="@+id/btnConfirmDateRange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirm"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>
