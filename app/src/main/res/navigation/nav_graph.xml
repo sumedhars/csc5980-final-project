@@ -19,10 +19,8 @@
     <fragment
         android:id="@+id/timerFragment"
         android:name="edu.msoe.myapplication.ui.fragments.TimerFragment"
-        android:label="Timer">
-        <!-- Define any actions if needed -->
-    </fragment>
-
+        android:label="Timer" />
+        
     <fragment
         android:id="@+id/exportManagerFragment"
         android:name="edu.msoe.myapplication.ui.fragments.ExportManagerFragment"

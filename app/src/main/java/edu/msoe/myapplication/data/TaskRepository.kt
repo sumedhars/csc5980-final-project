@@ -1,13 +1,15 @@
 package edu.msoe.myapplication.data
 
-// This class abstracts data operations and communicates with the API
 class TaskRepository(private val apiService: JiraApiService) {
 
-    // TODO: Add methods to retrieve tasks from JIRA and push time records.
-
-    fun fetchTasks(): List<Any> {
-        // Dummy implementation, replace with real API calls and data mapping.
-        return emptyList()
+    suspend fun fetchTasks(boardId: Int): List<Issue> {
+        val response = apiService.getIssuesForBoard(boardId)
+        return response.issues.map { jiraIssue ->
+            Issue(
+                id = jiraIssue.id,
+                title = jiraIssue.fields.summary
+            )
+        }
     }
 
     fun pushTimeRecord(issueId: String, timeSpent: Long) {

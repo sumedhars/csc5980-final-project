@@ -4,19 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import edu.msoe.myapplication.R
 
-// fragment to handle the stopwatch functionality for tracking time
 class TimerFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_timer, container, false)
-    }
+        val view = inflater.inflate(R.layout.fragment_timer, container, false)
 
-    // TODO: Implement stopwatch logic and pause/resume behavior.
-    // If paused and exiting, show a dialog to push time to JIRA
+        val issueId = arguments?.getString("issueId")
+        val issueTitle = arguments?.getString("issueTitle")
+
+        val issueTitleTextView: TextView = view.findViewById(R.id.tvTimerDisplay)
+        issueTitleTextView.text = issueTitle
+
+        return view
+    }
 }
