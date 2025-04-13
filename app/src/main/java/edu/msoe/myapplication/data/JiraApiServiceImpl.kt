@@ -8,10 +8,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 class JiraApiServiceImpl : JiraApiService {
 
     private val email: String = "bassoe@msoe.edu" // Replace with your email
-
+    private val apiToken: String = "ATATT3xFfGF0l33rpmjeFMLXburt5t7c8AMPn__OMw4NafgABk8U2xsv-lgdYi_gYFaEXc4OeQ66Rx2MCmZXBAY_K2GT-cY1qndK-qS3V7yem_XdQHJ54avptCxwJzx3iyr_uOz5hgY82eVxKwLBPvq4m7zHyKyYGbHCH-0IKIHXtUkgFckJjeM=D51610E0" // Updated API token
 
     private val encodedCredentials: String = Base64.encodeToString(
-        "$email:$".toByteArray(), Base64.NO_WRAP
+        "$email:$apiToken".toByteArray(), Base64.NO_WRAP
     )
 
     private val client = OkHttpClient.Builder()
