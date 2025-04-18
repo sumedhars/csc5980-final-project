@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -29,6 +30,7 @@ class TaskListFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_task_list, container, false)
 
+        // Setup RecyclerView
         val recyclerView: RecyclerView = view.findViewById(R.id.rvTaskList)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -44,8 +46,14 @@ class TaskListFragment : Fragment() {
         viewModel.issues.observe(viewLifecycleOwner) { issues ->
             adapter.submitList(issues)
         }
-
         viewModel.fetchIssues(boardId = 1) // Replace with actual board ID
+
+        // Find and set up the export button for workflow 2
+        val exportButton: Button = view.findViewById(R.id.btnExport)
+        exportButton.setOnClickListener {
+            // Navigate to ExportManagerFragment using destination ID.
+            findNavController().navigate(R.id.exportManagerFragment)
+        }
 
         return view
     }
@@ -85,3 +93,4 @@ class TaskListFragment : Fragment() {
         }
     }
 }
+

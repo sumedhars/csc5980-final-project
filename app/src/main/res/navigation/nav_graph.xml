@@ -20,18 +20,28 @@
         android:id="@+id/timerFragment"
         android:name="edu.msoe.myapplication.ui.fragments.TimerFragment"
         android:label="Timer" />
-        
+
     <fragment
         android:id="@+id/exportManagerFragment"
         android:name="edu.msoe.myapplication.ui.fragments.ExportManagerFragment"
         android:label="Export">
+        <!-- Action to navigate to the Date Picker -->
         <action
             android:id="@+id/action_exportManager_to_exportDatePicker"
             app:destination="@id/exportDatePickerFragment" />
+        <!-- Action to finish workflow and return to Task List -->
+        <action
+            android:id="@+id/action_exportManager_to_taskList"
+            app:destination="@id/taskListFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/exportDatePickerFragment"
         android:name="edu.msoe.myapplication.ui.fragments.ExportDatePickerFragment"
-        android:label="Select Date" />
+        android:label="Select Date">
+        <!-- Action to return back to Export Manager with selected date range -->
+        <action
+            android:id="@+id/action_exportDatePicker_to_exportManager"
+            app:destination="@id/exportManagerFragment" />
+    </fragment>
 </navigation>
