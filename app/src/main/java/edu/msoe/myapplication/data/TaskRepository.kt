@@ -1,5 +1,15 @@
 package edu.msoe.myapplication.data
 
+import java.time.LocalDate
+
+// Auxiliary data class
+data class TimeLog(
+    val issueId: String,
+    val durationMinutes: Int,
+    val date: LocalDate
+)
+
+
 class TaskRepository(private val apiService: JiraApiService) {
 
     suspend fun fetchTasks(boardId: Int): List<Issue> {
@@ -12,8 +22,38 @@ class TaskRepository(private val apiService: JiraApiService) {
         }
     }
 
-    fun pushTimeRecord(issueId: String, timeSpent: Long) {
-        // TODO: Implement the API call to update JIRA with the time record.
+    /**
+     * Fetch all worklogs for each issue, filter to the [start]–[end] range,
+     * and return a flat list of TimeLog entries.
+     */
+    suspend fun getTimeLogsByDateRange(start: LocalDate, end: LocalDate): List<TimeLog> {
+        // You may want to pass boardId in or cache inside the repo
+        val issues = fetchTasks(boardId = 1)
+        val entries = mutableListOf<TimeLog>()
+
+        for (issue in issues) {
+            val resp = apiService.getWorklogsForIssue(issue.id)
+            for (wl in resp.worklogs) {
+                // Parse the ISO date (first 10 chars = YYYY‑MM‑DD)
+                val date = LocalDate.parse(wl.started.substring(0, 10))
+                if (!date.isBefore(start) && !date.isAfter(end)) {
+                    val minutes = wl.timeSpentSeconds / 60
+                    entries += TimeLog(
+                        issueId = issue.id,
+                        durationMinutes = minutes,
+                        date = date
+                    )
+                }
+            }
+        }
+        return entries
+    }
+
+    /**
+     * Log [minutes] of work on [issueId] in Jira.
+     */
+    suspend fun logWork(issueId: String, minutes: Int) {
+        val request = AddWorklogRequest(timeSpentSeconds = minutes * 60)
+        apiService.addWorklog(issueId, request)
     }
 }
-

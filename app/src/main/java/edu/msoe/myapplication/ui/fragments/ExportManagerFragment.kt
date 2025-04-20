@@ -10,116 +10,101 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import edu.msoe.myapplication.R
+import edu.msoe.myapplication.data.ExportSummary
+import edu.msoe.myapplication.data.TaskRepository
+import edu.msoe.myapplication.data.TimeLog
+import edu.msoe.myapplication.data.JiraApiServiceImpl
+import edu.msoe.myapplication.ui.viewmodels.ExportViewModel
+import edu.msoe.myapplication.ui.viewmodels.ExportViewModelFactory
 import java.io.File
+import java.time.LocalDate
 
 class ExportManagerFragment : Fragment() {
+
+    private val exportViewModel: ExportViewModel by viewModels {
+        ExportViewModelFactory(TaskRepository(JiraApiServiceImpl()))
+    }
 
     private lateinit var tvExportSummary: TextView
     private lateinit var btnSelectDateRange: Button
     private lateinit var btnExportEmail: Button
 
-    // Variables to hold the user-selected date range
-    private var selectedStartDate: String? = null
-    private var selectedEndDate: String? = null
+    private var currentSummary: ExportSummary? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_export_manager, container, false)
-    }
+    ): View? = inflater.inflate(R.layout.fragment_export_manager, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // initialize UI components
-        tvExportSummary = view.findViewById(R.id.tvExportSummary)
-        btnSelectDateRange = view.findViewById(R.id.btnSelectDateRange)
-        btnExportEmail = view.findViewById(R.id.btnExportEmail)
+        tvExportSummary      = view.findViewById(R.id.tvExportSummary)
+        btnSelectDateRange   = view.findViewById(R.id.btnSelectDateRange)
+        btnExportEmail       = view.findViewById(R.id.btnExportEmail)
 
-        // initial message for the summary area
+        // Initial message
         tvExportSummary.text = "No date range selected. Please select a date range."
 
-        // when user clicks the "Select Date Range" button,
-        // navigate to the ExportDatePickerFragment
+        // Navigate to date picker
         btnSelectDateRange.setOnClickListener {
             findNavController().navigate(R.id.action_exportManager_to_exportDatePicker)
         }
 
-        //when user clicks "Export via Email", generate the report and save it locally
-        btnExportEmail.setOnClickListener {
-            if (selectedStartDate != null && selectedEndDate != null) {
-                // Calculate the summary and generate the CSV report.
-                val summaryText = calculateSummary(selectedStartDate!!, selectedEndDate!!)
-                val csvContent = generateCSVReport(selectedStartDate!!, selectedEndDate!!, summaryText)
-                // Save the generated CSV into the Downloads folder.
-                saveReportToDownloads(csvContent, selectedStartDate!!, selectedEndDate!!)
-            } else {
-                Toast.makeText(requireContext(), "Please select a date range first.", Toast.LENGTH_SHORT).show()
+        // Observe LiveData from the ViewModel
+        exportViewModel.summary.observe(viewLifecycleOwner) { summary ->
+            currentSummary = summary
+            tvExportSummary.text = buildString {
+                append("Time Summary from ${summary.startDate} to ${summary.endDate}:\n")
+                append("• Total Hours: ${"%.2f".format(summary.totalHours)}\n")
+                append("• Number of Tasks: ${summary.totalTasks}")
             }
         }
 
-        // Listen for results from the ExportDatePickerFragment.
-        // When the user selects a date range,
-        // update the stored values and recalculate the summary.
+        // When we get the date range back from the DatePicker
         setFragmentResultListener("exportDatePickerRequestKey") { _, bundle ->
-            val startDate = bundle.getString("startDate")
-            val endDate = bundle.getString("endDate")
-            if (!startDate.isNullOrEmpty() && !endDate.isNullOrEmpty()) {
-                selectedStartDate = startDate
-                selectedEndDate = endDate
-                val summary = calculateSummary(startDate, endDate)
-                tvExportSummary.text = summary
+            val startDate = LocalDate.parse(bundle.getString("startDate")!!)
+            val endDate   = LocalDate.parse(bundle.getString("endDate")!!)
+            exportViewModel.loadSummary(startDate, endDate)
+        }
+
+        // Export CSV into Downloads
+        btnExportEmail.setOnClickListener {
+            val summary = currentSummary
+            if (summary == null) {
+                Toast.makeText(requireContext(), "Please select a date range first.", Toast.LENGTH_SHORT).show()
+            } else {
+                val csv = buildReportCsv(summary)
+                saveCsvToDownloads(csv, summary)
             }
         }
     }
 
-    /**
-     * Calculates the export summary based on the provided start and end dates.
-     *
-     * Replace the dummy implementation with a real calculation (e.g., summing logged hours from tasks).
-     */
-    private fun calculateSummary(startDate: String, endDate: String): String {
-        // TODO: Replace these with the actual summary calculation logic.
-        val totalHours = 8   // e.g., Sum logged hours over tasks between the dates
-        val numberOfTasks = 3  // e.g., Count of tasks with logged time in the date range
-
-        return "Time Summary from $startDate to $endDate:\n" +
-                "Total Hours: $totalHours\n" +
-                "Number of Tasks: $numberOfTasks"
+    private fun buildReportCsv(summary: ExportSummary): String {
+        return buildString {
+            append("Report: Time Summary\n")
+            append("Date Range,${summary.startDate},${summary.endDate}\n")
+            append("Total Hours,${"%.2f".format(summary.totalHours)}\n")
+            append("Number of Tasks,${summary.totalTasks}\n")
+        }
     }
 
-    /**
-     * Generates a CSV report using the provided start
-     * and end dates as well as the calculated summary.
-     */
-    private fun generateCSVReport(startDate: String, endDate: String, summary: String): String {
-        val sb = StringBuilder()
-        sb.append("Time Summary Report\n")
-        sb.append("Date Range:, $startDate to $endDate\n")
-        sb.append("\n")
-        // In the CSV, we replace line breaks in the summary with commas.
-        sb.append(summary.replace("\n", ", ") + "\n")
-        return sb.toString()
-    }
-
-    /**
-     * Saves the provided report data as a CSV file in the public Downloads folder.
-     *
-     * TODO: Ensure proper permissions (WRITE_EXTERNAL_STORAGE) in AndroidManifest
-     * TODO: and have requested runtime permissions for API levels that require them.
-     */
-    private fun saveReportToDownloads(reportData: String, startDate: String, endDate: String) {
-        // Create a file name
-        val fileName = "TimeSummary_${startDate}_to_${endDate}.csv"
-        // Get the Downloads directory
-        val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        val file = File(downloadsDir, fileName)
+    private fun saveCsvToDownloads(csvContent: String, summary: ExportSummary) {
+        val filename = "TimeSummary_${summary.startDate}_to_${summary.endDate}.csv"
+        val downloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val outFile = File(downloads, filename)
         try {
-            file.writeText(reportData)
-            Toast.makeText(requireContext(), "Report saved to Downloads/$fileName", Toast.LENGTH_LONG).show()
+            outFile.writeText(csvContent)
+            Toast.makeText(requireContext(),
+                "Saved report to Downloads/$filename",
+                Toast.LENGTH_LONG
+            ).show()
         } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Failed to save report: ${e.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(),
+                "Error saving report: ${e.message}",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 }
