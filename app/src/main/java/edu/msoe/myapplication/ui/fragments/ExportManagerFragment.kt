@@ -9,13 +9,11 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import edu.msoe.myapplication.R
 import edu.msoe.myapplication.data.ExportSummary
 import edu.msoe.myapplication.data.TaskRepository
-import edu.msoe.myapplication.data.TimeLog
 import edu.msoe.myapplication.data.JiraApiServiceImpl
 import edu.msoe.myapplication.ui.viewmodels.ExportViewModel
 import edu.msoe.myapplication.ui.viewmodels.ExportViewModelFactory
@@ -63,11 +61,18 @@ class ExportManagerFragment : Fragment() {
         }
 
         // When we get the date range back from the DatePicker
-        setFragmentResultListener("exportDatePickerRequestKey") { _, bundle ->
-            val startDate = LocalDate.parse(bundle.getString("startDate")!!)
-            val endDate   = LocalDate.parse(bundle.getString("endDate")!!)
-            exportViewModel.loadSummary(startDate, endDate)
-        }
+        val navController = findNavController()
+        val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
+        savedStateHandle
+            ?.getLiveData<String>("startDate")
+            ?.observe(viewLifecycleOwner) { start ->
+                val end = savedStateHandle.get<String>("endDate") ?: return@observe
+                // Load the new summary when both dates are set
+                exportViewModel.loadSummary(
+                    LocalDate.parse(start),
+                    LocalDate.parse(end)
+                )
+            }
 
         // Export CSV into Downloads
         btnExportEmail.setOnClickListener {

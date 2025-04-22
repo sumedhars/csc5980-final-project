@@ -6,9 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.DatePicker
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import edu.msoe.myapplication.R
 import java.util.Locale
@@ -46,17 +44,16 @@ class ExportDatePickerFragment : Fragment() {
             val startDate = String.format(Locale.US, "%04d-%02d-%02d", startYear, startMonth, startDay)
             val endDate   = String.format(Locale.US, "%04d-%02d-%02d", endYear,   endMonth,   endDay)
 
-            // Send the result back to ExportManagerFragment
-            setFragmentResult(
-                "exportDatePickerRequestKey",
-                bundleOf(
-                    "startDate" to startDate,
-                    "endDate"   to endDate
-                )
-            )
+            // Save into the previous back stack entry's SavedStateHandle
+            findNavController().previousBackStackEntry
+                ?.savedStateHandle
+                ?.set("startDate", startDate)
+            findNavController().previousBackStackEntry
+                ?.savedStateHandle
+                ?.set("endDate", endDate)
 
-            // Navigate back to the ExportManagerFragment
-            findNavController().navigate(R.id.action_exportDatePicker_to_exportManager)
+            // Pop back to ExportManagerFragment
+            findNavController().popBackStack()
         }
     }
 }

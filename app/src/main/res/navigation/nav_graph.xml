@@ -39,9 +39,5 @@
         android:id="@+id/exportDatePickerFragment"
         android:name="edu.msoe.myapplication.ui.fragments.ExportDatePickerFragment"
         android:label="Select Date">
-        <!-- Action to return back to Export Manager with selected date range -->
-        <action
-            android:id="@+id/action_exportDatePicker_to_exportManager"
-            app:destination="@id/exportManagerFragment" />
     </fragment>
 </navigation>
