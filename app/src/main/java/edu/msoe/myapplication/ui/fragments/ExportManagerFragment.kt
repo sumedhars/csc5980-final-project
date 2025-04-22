@@ -96,6 +96,11 @@ class ExportManagerFragment : Fragment() {
     }
 
     private fun saveCsvToDownloads(csvContent: String, summary: ExportSummary) {
+        val downloadDir = File("/sdcard/Download")
+        if (!downloadDir.exists()) {
+            downloadDir.mkdirs()
+        }
+        // create file inside sdcard/Download
         val filename = "TimeSummary_${summary.startDate}_to_${summary.endDate}.csv"
         val downloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         val outFile = File(downloads, filename)

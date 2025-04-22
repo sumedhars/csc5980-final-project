@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class JiraApiServiceImpl : JiraApiService {
 
     private val email: String = "bassoe@msoe.edu" // Replace with your email
-    private val apiToken: String = "insert-token-here"
+    private val apiToken: String = "insert-here"
 
     private val encodedCredentials: String = Base64.encodeToString(
         "$email:$apiToken".toByteArray(), Base64.NO_WRAP
