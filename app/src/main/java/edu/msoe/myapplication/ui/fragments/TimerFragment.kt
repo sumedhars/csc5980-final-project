@@ -84,6 +84,8 @@ class TimerFragment : Fragment() {
                     timerViewModel.logTime(id, elapsedMillis / 1000) // Pass duration in seconds
                     btnLogTime.isEnabled = false // Disable log time after logging
                     Toast.makeText(requireContext(), "Time logged successfully!", Toast.LENGTH_SHORT).show()
+                    timerViewModel.resetTimer()
+                    tvTimer.text = "00:00:00" // Reset timer display
                 } else {
                     Toast.makeText(requireContext(), "No time to log!", Toast.LENGTH_SHORT).show()
                 }

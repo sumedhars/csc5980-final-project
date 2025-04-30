@@ -42,10 +42,10 @@ class TimerViewModel(private val repository: TaskRepository) : ViewModel() {
         _elapsedMillis.value = sessionMillis
 
         // send to JIRA as minutes (rounding)
-        val minutes = (sessionMillis / 1000 / 60).toInt()
-        viewModelScope.launch {
-            repository.logWork(issueId, minutes)
-        }
+//        val minutes = (sessionMillis / 1000 / 60).toInt()
+//        viewModelScope.launch {
+//            repository.logWork(issueId, minutes)
+//        }
     }
 
     /** Resume timing the same session. */
@@ -84,9 +84,16 @@ class TimerViewModel(private val repository: TaskRepository) : ViewModel() {
 
     /** Log time to Jira, optionally with a start time. */
     fun logTime(issueId: String, durationInSeconds: Long, started: String? = null) {
-        val minutes = (durationInSeconds / 60).toInt()
-        viewModelScope.launch {
-            repository.logWork(issueId, minutes, started)
+        if (durationInSeconds < 60) {
+            viewModelScope.launch {
+                repository.logWork(issueId, 1, started)
+            }
+        }
+        else {
+            val minutes = (durationInSeconds / 60).toInt()
+            viewModelScope.launch {
+                repository.logWork(issueId, minutes, started)
+            }
         }
     }
 
