@@ -54,7 +54,8 @@ data class WorklogItem(
 
 data class AddWorklogRequest(
     val timeSpentSeconds: Int,
-    val comment: String? = null
+    val comment: String? = null,
+    val started: String? = null // Added optional started parameter
 )
 
 data class AddWorklogResponse(

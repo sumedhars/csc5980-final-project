@@ -74,6 +74,30 @@ class TimerViewModel(private val repository: TaskRepository) : ViewModel() {
         }
     }
 
+    /** Reset the timer completely without logging the time. */
+    fun resetTimer() {
+        tickerJob?.cancel()
+        startTimestamp = 0L
+        accumulatedMillis = 0L
+        _elapsedMillis.value = 0L
+    }
+
+    /** Log time to Jira, optionally with a start time. */
+    fun logTime(issueId: String, durationInSeconds: Long, started: String? = null) {
+        val minutes = (durationInSeconds / 60).toInt()
+        viewModelScope.launch {
+            repository.logWork(issueId, minutes, started)
+        }
+    }
+
+    /** Log manual time to Jira. */
+    fun logManualTime(issueId: String, dateTime: String, durationInSeconds: Long) {
+        val minutes = (durationInSeconds / 60).toInt()
+        viewModelScope.launch {
+            repository.logWork(issueId, minutes, dateTime)
+        }
+    }
+
     override fun onCleared() {
         tickerJob?.cancel()
         super.onCleared()

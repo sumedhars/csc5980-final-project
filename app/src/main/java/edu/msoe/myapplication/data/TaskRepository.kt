@@ -50,10 +50,13 @@ class TaskRepository(private val apiService: JiraApiService) {
     }
 
     /**
-     * Log [minutes] of work on [issueId] in Jira.
+     * Log time to Jira, optionally with a start time.
      */
-    suspend fun logWork(issueId: String, minutes: Int) {
-        val request = AddWorklogRequest(timeSpentSeconds = minutes * 60)
+    suspend fun logWork(issueId: String, minutes: Int, started: String? = null) {
+        val request = AddWorklogRequest(
+            timeSpentSeconds = minutes * 60,
+            started = started
+        )
         apiService.addWorklog(issueId, request)
     }
 }

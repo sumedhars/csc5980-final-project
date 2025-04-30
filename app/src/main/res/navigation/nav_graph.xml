@@ -19,7 +19,11 @@
     <fragment
         android:id="@+id/timerFragment"
         android:name="edu.msoe.myapplication.ui.fragments.TimerFragment"
-        android:label="Timer" />
+        android:label="Timer">
+        <action
+            android:id="@+id/action_timerFragment_to_datePickerFragment"
+            app:destination="@id/datePickerFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/exportManagerFragment"
@@ -40,4 +44,9 @@
         android:name="edu.msoe.myapplication.ui.fragments.ExportDatePickerFragment"
         android:label="Select Date">
     </fragment>
+
+    <fragment
+        android:id="@+id/datePickerFragment"
+        android:name="edu.msoe.myapplication.ui.fragments.DatePickerFragment"
+        android:label="Date Picker" />
 </navigation>
