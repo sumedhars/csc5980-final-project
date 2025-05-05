@@ -1,43 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <!-- Header -->
-    <TextView
-        android:id="@+id/tvExportTitle"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Export Time Summary"
-        android:textSize="20sp"
-        android:paddingBottom="16dp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <!-- Summary display area -->
-    <TextView
-        android:id="@+id/tvExportSummary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Summary details go here"
-        android:padding="16dp"
-        android:background="@android:color/darker_gray"
-        android:textColor="@android:color/white" />
+        <!-- Header -->
+        <TextView
+            android:id="@+id/tvExportTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Export Time Summary"
+            android:textSize="20sp"
+            android:paddingBottom="16dp" />
 
-    <!-- Button to select date range -->
-    <Button
-        android:id="@+id/btnSelectDateRange"
+        <!-- Summary display area -->
+        <TextView
+            android:id="@+id/tvExportSummary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Summary details go here"
+            android:padding="16dp"
+            android:background="@android:color/darker_gray"
+            android:textColor="@android:color/white" />
+
+        <!-- Button to select date range -->
+        <Button
+            android:id="@+id/btnSelectDateRange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Date Range"
+            android:layout_marginTop="16dp" />
+
+        <!-- Button to export the report via email -->
+        <Button
+            android:id="@+id/btnExportEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Export to Local Device"
+            android:layout_marginTop="8dp" />
+
+    </LinearLayout>
+
+    <!-- Loading indicator -->
+    <ProgressBar
+        android:id="@+id/progressLoading"
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select Date Range"
-        android:layout_marginTop="16dp" />
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
-    <!-- Button to export the report via email -->
-    <Button
-        android:id="@+id/btnExportEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Export to Local Device"
-        android:layout_marginTop="8dp" />
-
-</LinearLayout>
+</FrameLayout>
