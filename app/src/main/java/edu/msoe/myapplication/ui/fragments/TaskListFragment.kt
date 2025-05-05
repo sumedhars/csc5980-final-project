@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -33,7 +34,6 @@ class TaskListFragment : Fragment() {
         // Setup RecyclerView
         val recyclerView: RecyclerView = view.findViewById(R.id.rvTaskList)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
         val adapter = TaskListAdapter { issue ->
             val bundle = Bundle().apply {
                 putString("issueId", issue.id)
@@ -48,10 +48,9 @@ class TaskListFragment : Fragment() {
         }
         viewModel.fetchIssues(boardId = 1) // Replace with actual board ID
 
-        // Find and set up the export button for workflow 2
+        // Export button for Workflow 2
         val exportButton: Button = view.findViewById(R.id.btnExport)
         exportButton.setOnClickListener {
-            // Navigate to ExportManagerFragment using destination ID.
             findNavController().navigate(R.id.exportManagerFragment)
         }
 
@@ -71,7 +70,7 @@ class TaskListFragment : Fragment() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
             val view = LayoutInflater.from(parent.context)
-                .inflate(android.R.layout.simple_list_item_1, parent, false)
+                .inflate(R.layout.item_task, parent, false)
             return TaskViewHolder(view, onClick)
         }
 
@@ -85,12 +84,16 @@ class TaskListFragment : Fragment() {
             itemView: View,
             private val onClick: (Issue) -> Unit
         ) : RecyclerView.ViewHolder(itemView) {
+            private val titleText: TextView = itemView.findViewById(R.id.tvTaskTitle)
+            private val idText: TextView = itemView.findViewById(R.id.tvTaskId)
 
             fun bind(issue: Issue) {
+                titleText.text = issue.title
+                idText.text = "ID: ${issue.id}"
                 itemView.setOnClickListener { onClick(issue) }
-                (itemView as TextView).text = issue.title
             }
         }
     }
 }
+
 
