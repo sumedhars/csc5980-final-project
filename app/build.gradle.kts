@@ -50,5 +50,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 }

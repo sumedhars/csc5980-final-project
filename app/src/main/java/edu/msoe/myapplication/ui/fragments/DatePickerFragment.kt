@@ -55,8 +55,7 @@ class DatePickerFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            val dateTime = LocalDateTime.of(year, month, day, hour, minute)
-            val formattedDateTime = dateTime.format(DateTimeFormatter.ISO_DATE_TIME)
+            val formattedDateTime = formatToJiraDateTime(year, month, day, hour, minute)
 
             // Pass the data back to the TimerFragment
             findNavController().previousBackStackEntry?.savedStateHandle?.set("selectedDateTime", formattedDateTime)
@@ -77,5 +76,12 @@ class DatePickerFragment : Fragment() {
         }
 
         return if (totalSeconds > 0) totalSeconds else null
+    }
+
+    private fun formatToJiraDateTime(year: Int, month: Int, day: Int, hour: Int, minute: Int): String {
+        val dateTime = LocalDateTime.of(year, month, day, hour, minute)
+        val offsetDateTime = dateTime.atZone(java.time.ZoneId.systemDefault()).toOffsetDateTime()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+        return offsetDateTime.format(formatter)
     }
 }

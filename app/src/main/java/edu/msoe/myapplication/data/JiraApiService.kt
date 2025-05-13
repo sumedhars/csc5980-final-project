@@ -1,5 +1,6 @@
 package edu.msoe.myapplication.data
 
+import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -27,6 +28,7 @@ interface JiraApiService {
         @Body request: AddWorklogRequest
     ): AddWorklogResponse
 }
+
 
 // Data classes for the API response
 data class JiraIssuesResponse(

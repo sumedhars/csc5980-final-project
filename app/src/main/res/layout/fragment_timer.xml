@@ -6,6 +6,16 @@
     android:gravity="center"
     android:padding="16dp">
 
+    <!-- Issue Title Display -->
+    <TextView
+        android:id="@+id/tvIssueTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Issue Title"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
+
     <!-- Timer display -->
     <TextView
         android:id="@+id/tvTimer"

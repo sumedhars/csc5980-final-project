@@ -23,6 +23,7 @@ class TimerFragment : Fragment() {
     }
 
     private lateinit var tvTimer: TextView
+    private lateinit var tvIssueTitle: TextView
     private lateinit var btnStart: Button
     private lateinit var btnPause: Button
     private lateinit var btnResume: Button
@@ -39,6 +40,7 @@ class TimerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         tvTimer   = view.findViewById(R.id.tvTimer)
+        tvIssueTitle = view.findViewById(R.id.tvIssueTitle)
         btnStart  = view.findViewById(R.id.btnStart)
         btnPause  = view.findViewById(R.id.btnPause)
         btnResume = view.findViewById(R.id.btnResume)
@@ -50,6 +52,7 @@ class TimerFragment : Fragment() {
             issueId    = it.getString("issueId")
             issueTitle = it.getString("issueTitle")
             requireActivity().title = issueTitle
+            tvIssueTitle.text = issueTitle // Display the issue title in the TextView
         }
 
         btnStart.setOnClickListener {

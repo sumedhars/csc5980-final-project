@@ -2,13 +2,14 @@ package edu.msoe.myapplication.data
 
 import android.util.Base64
 import okhttp3.OkHttpClient
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class JiraApiServiceImpl : JiraApiService {
 
     private val email: String = "bassoe@msoe.edu" // Replace with your email
-    private val apiToken: String = "insert-token-here"
+    private val apiToken: String = "api-key-here"
 
     private val encodedCredentials: String = Base64.encodeToString(
         "$email:$apiToken".toByteArray(), Base64.NO_WRAP
